@@ -340,7 +340,7 @@ namespace WpfApp31
         private void GraphCanvas_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Point position = e.GetPosition(GraphCanvas);
-            string nodeName = $"Node{graph.Nodes.Count + 1}";
+            string nodeName = ((char)('A' + graph.Nodes.Count)).ToString();
 
             if (!graph.Nodes.ContainsKey(nodeName))
             {

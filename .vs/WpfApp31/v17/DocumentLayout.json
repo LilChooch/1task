@@ -3,24 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\wpfapp31\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|solutionrelative:wpfapp31\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{C1C98C20-7D4C-4324-B7C2-CBEC2EE55960}|task4\\task4.csproj|c:\\users\\\u043E\u043B\u0435\u0433\\source\\repos\\wpfapp31\\task4\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{C1C98C20-7D4C-4324-B7C2-CBEC2EE55960}|task4\\task4.csproj|solutionrelative:task4\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|c:\\users\\\u043E\u043B\u0435\u0433\\source\\repos\\wpfapp31\\wpfapp31\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|solutionrelative:wpfapp31\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\wpfapp31\\edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|solutionrelative:wpfapp31\\edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\wpfapp31\\node.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|solutionrelative:wpfapp31\\node.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\wpfapp31\\graph.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7E5E148E-0756-4BF5-820B-349AE41E8354}|WpfApp31\\WpfApp31.csproj|solutionrelative:wpfapp31\\graph.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C1C98C20-7D4C-4324-B7C2-CBEC2EE55960}|task4\\task4.csproj|c:\\users\\\u043E\u043B\u0435\u0433\\source\\repos\\wpfapp31\\task4\\graph.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1C98C20-7D4C-4324-B7C2-CBEC2EE55960}|task4\\task4.csproj|solutionrelative:task4\\graph.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,70 +18,31 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Edge.cs",
-              "DocumentMoniker": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\Edge.cs",
-              "RelativeDocumentMoniker": "WpfApp31\\Edge.cs",
-              "ToolTip": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\Edge.cs",
-              "RelativeToolTip": "WpfApp31\\Edge.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T20:16:37.062Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Node.cs",
-              "DocumentMoniker": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\Node.cs",
-              "RelativeDocumentMoniker": "WpfApp31\\Node.cs",
-              "ToolTip": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\Node.cs",
-              "RelativeToolTip": "WpfApp31\\Node.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T20:16:03.612Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "Graph.cs",
-              "DocumentMoniker": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\Graph.cs",
-              "RelativeDocumentMoniker": "WpfApp31\\Graph.cs",
-              "ToolTip": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\Graph.cs",
-              "RelativeToolTip": "WpfApp31\\Graph.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAqwEUAAAAFAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\task4\\Graph.cs",
+              "RelativeDocumentMoniker": "task4\\Graph.cs",
+              "ToolTip": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\task4\\Graph.cs",
+              "RelativeToolTip": "task4\\Graph.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAAAF4AAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T20:15:29.795Z",
+              "WhenOpened": "2024-12-24T23:45:32.503Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "WpfApp31\\MainWindow.xaml",
-              "ToolTip": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\MainWindow.xaml",
-              "RelativeToolTip": "WpfApp31\\MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\task4\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "task4\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\task4\\MainWindow.xaml",
+              "RelativeToolTip": "task4\\MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-24T20:12:00.977Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "WpfApp31\\MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\\u041E\u043B\u0435\u0433\\source\\repos\\WpfApp31\\WpfApp31\\MainWindow.xaml.cs",
-              "RelativeToolTip": "WpfApp31\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAKEBAAAAAAAAAAAAAK8BAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T20:11:59.091Z",
+              "WhenOpened": "2024-12-24T23:21:33.186Z",
               "EditorCaption": ""
             }
           ]

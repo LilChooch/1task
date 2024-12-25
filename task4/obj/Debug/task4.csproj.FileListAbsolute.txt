@@ -1,0 +1,15 @@
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4.csproj.AssemblyReference.cache
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\MainWindow.g.cs
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\App.g.cs
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4_MarkupCompile.cache
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4_MarkupCompile.lref
+C:\Users\Олег\source\repos\WpfApp31\task4\bin\Debug\task4.exe.config
+C:\Users\Олег\source\repos\WpfApp31\task4\bin\Debug\task4.exe
+C:\Users\Олег\source\repos\WpfApp31\task4\bin\Debug\task4.pdb
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\MainWindow.baml
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4.g.resources
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4.Properties.Resources.resources
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4.csproj.GenerateResource.cache
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4.csproj.CoreCompileInputs.cache
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4.exe
+C:\Users\Олег\source\repos\WpfApp31\task4\obj\Debug\task4.pdb
