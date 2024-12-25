@@ -7,56 +7,39 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <DockPanel>
-            <!-- Меню -->
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="Действия">
-                    <MenuItem Header="Найти кратчайший путь" Click="FindShortestPath_Click"/>
-                    <MenuItem Header="Очистить путь" Click="ClearPath_Click"/>
-                </MenuItem>
-            </Menu>
+        <Canvas x:Name="GraphCanvas" Background="White" MouseRightButtonUp="Canvas_MouseRightButtonUp"
+                MouseMove="Canvas_MouseMove" MouseLeftButtonDown="Canvas_MouseLeftButtonDown" />
 
-            <!-- Основная область -->
-            <Grid>
-                <!-- Холст для отображения графа -->
-                <Canvas Name="GraphCanvas" Background="White" MouseLeftButtonDown="GraphCanvas_MouseLeftButtonDown" VerticalAlignment="Center"  Margin="0,0,309,0" Height="398"/>
-
-                <!-- Панель управления -->
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Width="300" Margin="5">
-                    <!-- Управление узлами -->
-                    <GroupBox Header="Узлы" Margin="5">
-                        <StackPanel>
-                            <TextBox Name="NodeNameTextBox" ToolTip="Введите имя узла" Margin="5"/>
-                            <Button Content="Добавить узел" Click="AddNode_Click" Margin="5"/>
-                            <Button Content="Удалить узел" Click="DeleteNode_Click" Margin="5"/>
-                        </StackPanel>
-                    </GroupBox>
-
-                    <!-- Управление рёбрами -->
-                    <GroupBox Header="Рёбра" Margin="5">
-                        <StackPanel>
-                            <TextBox Name="EdgeStartTextBox" ToolTip="Начало" Margin="5"/>
-                            <TextBox Name="EdgeEndTextBox" ToolTip="Конец" Margin="5"/>
-                            <TextBox Name="EdgeWeightTextBox" ToolTip="Вес" Margin="5"/>
-                            <Button Content="Добавить ребро" Click="AddEdge_Click" Margin="5"/>
-                            <Button Content="Удалить ребро" Click="DeleteEdge_Click" Margin="5"/>
-                        </StackPanel>
-                    </GroupBox>
-
-                    <!-- Панель поиска пути -->
-                    <GroupBox Header="Кратчайший путь" Margin="5">
-                        <StackPanel>
-                            <TextBox Name="SourceNodeTextBox" ToolTip="Источник" Margin="5"/>
-                            <TextBox Name="TargetNodeTextBox" ToolTip="Целевая вершина" Margin="5"/>
-                            <Button Content="Найти путь" Click="FindShortestPath_Click" Margin="5"/>
-                            <TextBlock Text="Лог выполнения:" Margin="5" FontWeight="Bold"/>
-                            <ScrollViewer Height="200" Margin="5">
-                                <TextBox Name="AlgorithmLog" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </GroupBox>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10">
+            <GroupBox Header="Узлы">
+                <StackPanel>
+                    <TextBox x:Name="NodeNameTextBox" Width="150" Margin="5" Text="Введите имя узла" />
+                    <Button x:Name="AddNodeButton" Content="Добавить узел" Click="AddNode_Click" Margin="5" />
+                    <Button x:Name="DeleteNodeButton" Content="Удалить узел" Click="DeleteNode_Click" Margin="5" />
                 </StackPanel>
-            </Grid>
-        </DockPanel>
+            </GroupBox>
+
+            <GroupBox Header="Рёбра" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBox x:Name="EdgeStartTextBox" Width="150" Margin="5" Text="Начальный узел" />
+                    <TextBox x:Name="EdgeEndTextBox" Width="150" Margin="5" Text="Конечный узел" />
+                    <TextBox x:Name="EdgeWeightTextBox" Width="150" Margin="5" Text="Вес" />
+                    <Button x:Name="AddEdgeButton" Content="Добавить ребро" Click="AddEdge_Click" Margin="5" />
+                    <Button x:Name="DeleteEdgeButton" Content="Удалить ребро" Click="DeleteEdge_Click" Margin="5" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Кратчайший путь" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBox x:Name="SourceNodeTextBox" Width="150" Margin="5" Text="Источник" />
+                    <TextBox x:Name="TargetNodeTextBox" Width="150" Margin="5" Text="Цель" />
+                    <Button x:Name="FindPathButton" Content="Найти путь" Click="FindShortestPath_Click" Margin="5" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Логи" Margin="0,10,0,0">
+                <TextBox x:Name="AlgorithmLog" Width="300" Height="200" AcceptsReturn="True" IsReadOnly="True" />
+            </GroupBox>
+        </StackPanel>
     </Grid>
 </Window>

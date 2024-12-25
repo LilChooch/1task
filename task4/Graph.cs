@@ -62,6 +62,24 @@ namespace task4
         {
             Edges.Add(new Edge(start, end, weight));
         }
+        public int GetPathDistance(List<string> path)
+        {
+            int distance = 0;
+
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                string start = path[i];
+                string end = path[i + 1];
+
+                var edge = Edges.FirstOrDefault(e => e.Start == start && e.End == end);
+                if (edge != null)
+                {
+                    distance += edge.Weight;
+                }
+            }
+
+            return distance;
+        }
 
         public List<string> Dijkstra(string source, string target, Action<string, string, int> logAction)
         {

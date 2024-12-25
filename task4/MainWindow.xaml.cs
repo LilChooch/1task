@@ -20,162 +20,123 @@ namespace task4
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Graph graph;
-        private const double NodeRadius = 20;
-        private Grid movingNode = null;
-        private Point mouseOffset;
+       
+            private const double NodeRadius = 20;
+            private Graph graph;
+            private Grid movingNode = null;
+            private Point mouseOffset;
 
-        public MainWindow()
-        {
-            InitializeComponent();
-            graph = new Graph();
-        }
-
-        /*private void GraphCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Point position = e.GetPosition(GraphCanvas);
-            string nodeName = ((char)('A' + graph.Nodes.Count)).ToString();
-
-            if (!graph.Nodes.ContainsKey(nodeName))
+            public MainWindow()
             {
+                InitializeComponent();
+                graph = new Graph();
+            }
+
+            // Добавление узла
+            private void AddNode_Click(object sender, RoutedEventArgs e)
+            {
+                string nodeName = NodeNameTextBox.Text.Trim();
+                if (string.IsNullOrEmpty(nodeName))
+                {
+                    MessageBox.Show("Введите имя узла.");
+                    return;
+                }
+
+                if (graph.Nodes.ContainsKey(nodeName))
+                {
+                    MessageBox.Show("Узел с таким именем уже существует.");
+                    return;
+                }
+
                 graph.AddNode(nodeName);
-                AddNodeToCanvas(nodeName, position);
+                AddNodeToCanvas(nodeName, new Point(100, 100));
+                NodeNameTextBox.Clear();
             }
-        }*/
-       /* private void Node_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (movingNode != null && e.LeftButton == MouseButtonState.Pressed)
+
+            // Удаление узла
+            private void DeleteNode_Click(object sender, RoutedEventArgs e)
             {
-                // Получаем позицию мыши
-                Point mousePosition = e.GetPosition(GraphCanvas);
-
-                // Вычисляем новые координаты узла
-                double newX = mousePosition.X - mouseOffset.X;
-                double newY = mousePosition.Y - mouseOffset.Y;
-
-                // Перемещаем узел
-                Canvas.SetLeft(movingNode, newX);
-                Canvas.SetTop(movingNode, newY);
-
-                // Обновляем координаты узла в модели графа
-                var label = movingNode.Children.OfType<TextBlock>().FirstOrDefault();
-                if (label != null && graph.Nodes.ContainsKey(label.Text))
+                string nodeName = NodeNameTextBox.Text.Trim();
+                if (string.IsNullOrEmpty(nodeName) || !graph.Nodes.ContainsKey(nodeName))
                 {
-                    graph.Nodes[label.Text].Position = new Point(newX + NodeRadius, newY + NodeRadius);
+                    MessageBox.Show("Узел не найден.");
+                    return;
                 }
 
-                // Подсвечиваем узел
-                var ellipse = movingNode.Children.OfType<Ellipse>().FirstOrDefault();
-                if (ellipse != null)
+                graph.RemoveNode(nodeName);
+
+                var nodeToRemove = GraphCanvas.Children
+                    .OfType<Grid>()
+                    .FirstOrDefault(grid => grid.Children.OfType<TextBlock>().FirstOrDefault()?.Text == nodeName);
+
+                if (nodeToRemove != null)
                 {
-                    ellipse.Fill = Brushes.Yellow; // Подсветка узла
+                    GraphCanvas.Children.Remove(nodeToRemove);
                 }
 
-                // Обновляем связанные рёбра
-                var nodeName = label?.Text;
-                UpdateEdges(nodeName);
-            }
-        }*/
+                // Удалить все рёбра, связанные с узлом
+                var edgesToRemove = GraphCanvas.Children.OfType<Line>()
+                    .Where(line => line.Tag is Tuple<string, string> edgeTag &&
+                                   (edgeTag.Item1 == nodeName || edgeTag.Item2 == nodeName))
+                    .ToList();
 
-        /*private void Node_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (movingNode != null)
-            {
-                // Убираем подсветку с узла
-                var ellipse = movingNode.Children.OfType<Ellipse>().FirstOrDefault();
-                if (ellipse != null)
+                foreach (var edge in edgesToRemove)
                 {
-                    ellipse.Fill = Brushes.LightBlue; // Возвращаем основной цвет
+                    GraphCanvas.Children.Remove(edge);
                 }
 
-                // Завершаем перемещение
-                movingNode = null;
-                GraphCanvas.ReleaseMouseCapture();
+                NodeNameTextBox.Clear();
             }
-        }*/
 
-
-       /* private void AddNodeToCanvas(string name, Point position)
-        {
-            // Создаём круг узла
-            Ellipse node = new Ellipse
+            // Добавление рёбра
+            private void AddEdge_Click(object sender, RoutedEventArgs e)
             {
-                Width = NodeRadius * 2,
-                Height = NodeRadius * 2,
-                Fill = Brushes.LightBlue, // Основной цвет узла
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
+                string start = EdgeStartTextBox.Text.Trim();
+                string end = EdgeEndTextBox.Text.Trim();
 
-            // Создаём текст с именем узла
-            TextBlock label = new TextBlock
-            {
-                Text = name,
-                Foreground = Brushes.Black,
-                FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-           
-            // Группа для объединения круга и текста
-            Grid nodeGroup = new Grid();
-            nodeGroup.Children.Add(node);
-            nodeGroup.Children.Add(label);
-
-            // Привязываем события мыши для подсветки и перемещения
-            nodeGroup.MouseLeftButtonDown += Node_MouseLeftButtonDown;
-            nodeGroup.MouseLeftButtonUp += Node_MouseLeftButtonUp;
-            nodeGroup.MouseMove += Node_MouseMove;
-
-            // Добавляем узел на Canvas
-            GraphCanvas.Children.Add(nodeGroup);
-            Canvas.SetLeft(nodeGroup, position.X - NodeRadius);
-            Canvas.SetTop(nodeGroup, position.Y - NodeRadius);
-
-            // Добавляем узел в граф
-            graph.Nodes[name].Position = position;
-
-           
-        }*/
-        
-
-        private void Node_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Grid nodeGroup)
-            {
-                movingNode = nodeGroup;
-                Point mousePosition = e.GetPosition(GraphCanvas);
-                double nodeX = Canvas.GetLeft(nodeGroup);
-                double nodeY = Canvas.GetTop(nodeGroup);
-
-                mouseOffset = new Point(mousePosition.X - nodeX, mousePosition.Y - nodeY);
-                GraphCanvas.CaptureMouse();
-            }
-        }
-
-        private void GraphCanvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (movingNode != null)
-            {
-                Point mousePosition = e.GetPosition(GraphCanvas);
-
-                double newX = mousePosition.X - mouseOffset.X;
-                double newY = mousePosition.Y - mouseOffset.Y;
-
-                Canvas.SetLeft(movingNode, newX);
-                Canvas.SetTop(movingNode, newY);
-
-                var label = movingNode.Children.OfType<TextBlock>().FirstOrDefault();
-                if (label != null && graph.Nodes.ContainsKey(label.Text))
+                if (!int.TryParse(EdgeWeightTextBox.Text.Trim(), out int weight))
                 {
-                    graph.Nodes[label.Text].Position = new Point(newX + NodeRadius, newY + NodeRadius);
+                    MessageBox.Show("Введите корректное значение веса.");
+                    return;
                 }
 
-                UpdateEdges(label?.Text);
-            }
-        }
+                if (!graph.Nodes.ContainsKey(start) || !graph.Nodes.ContainsKey(end))
+                {
+                    MessageBox.Show("Один из узлов не существует.");
+                    return;
+                }
 
-        private void GraphCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+                graph.AddEdge(start, end, weight);
+                AddEdgeToCanvas(start, end, weight);
+                EdgeStartTextBox.Clear();
+                EdgeEndTextBox.Clear();
+                EdgeWeightTextBox.Clear();
+            }
+
+            // Удаление рёбра
+            private void DeleteEdge_Click(object sender, RoutedEventArgs e)
+            {
+                string start = EdgeStartTextBox.Text.Trim();
+                string end = EdgeEndTextBox.Text.Trim();
+
+                if (!graph.Nodes.ContainsKey(start) || !graph.Nodes.ContainsKey(end))
+                {
+                    MessageBox.Show("Указанные узлы не найдены.");
+                    return;
+                }
+
+                graph.RemoveEdge(start, end);
+
+                var edgeToRemove = GraphCanvas.Children.OfType<Line>()
+                    .FirstOrDefault(line => line.Tag is Tuple<string, string> edgeTag &&
+                                            edgeTag.Item1 == start && edgeTag.Item2 == end);
+
+                if (edgeToRemove != null)
+                {
+                    GraphCanvas.Children.Remove(edgeToRemove);
+                }
+            }
+        private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Получаем координаты клика
             Point position = e.GetPosition(GraphCanvas);
@@ -194,490 +155,38 @@ namespace task4
             }
         }
 
-        private void AddEdge_Click(object sender, RoutedEventArgs e)
-        {
-            string start = EdgeStartTextBox.Text.Trim();
-            string end = EdgeEndTextBox.Text.Trim();
-            if (int.TryParse(EdgeWeightTextBox.Text.Trim(), out int weight))
+        // Перемещение узлов (ПКМ)
+        private void Canvas_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
             {
-                if (!graph.Nodes.ContainsKey(start) || !graph.Nodes.ContainsKey(end))
+                if (movingNode != null)
                 {
-                    MessageBox.Show("Указанные узлы не найдены.");
-                    return;
+                    movingNode = null;
+                    GraphCanvas.ReleaseMouseCapture();
                 }
-
-                graph.AddEdge(start, end, weight);
-                AddEdgeToCanvas(start, end, weight);
-
-                MessageBox.Show($"Ребро от {start} до {end} с весом {weight} добавлено.");
             }
-            else
+
+            private void Canvas_MouseMove(object sender, MouseEventArgs e)
             {
-                MessageBox.Show("Введите корректное значение веса.");
-            }
-        }
-        /*private Tuple<Point, Point> GetEdgePoints(Point start, Point end, double radius)
-        {
-            // Вычисляем угол между вершинами
-            double angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
-
-            // Начальная точка (край первого круга)
-            Point startEdge = new Point(
-                start.X + radius * Math.Cos(angle),
-                start.Y + radius * Math.Sin(angle)
-            );
-
-            // Конечная точка (край второго круга)
-            Point endEdge = new Point(
-                end.X - radius * Math.Cos(angle),
-                end.Y - radius * Math.Sin(angle)
-            );
-
-            return Tuple.Create(startEdge, endEdge);
-        }*/
-       /* private void UpdateLine(Line edge, Point startPosition, Point endPosition)
-        {
-            // Вычисляем новые точки для линии
-            var edgePoints = GetEdgePoints(startPosition, endPosition, NodeRadius);
-
-            edge.X1 = edgePoints.Item1.X;
-            edge.Y1 = edgePoints.Item1.Y;
-            edge.X2 = edgePoints.Item2.X;
-            edge.Y2 = edgePoints.Item2.Y;
-
-            // Находим и обновляем текст с весом, если он связан с этой линией
-            var weightLabel = GraphCanvas.Children.OfType<TextBlock>()
-                .FirstOrDefault(label => Canvas.GetLeft(label) == (edge.X1 + edge.X2) / 2 &&
-                                         Canvas.GetTop(label) == (edge.Y1 + edge.Y2) / 2);
-
-            if (weightLabel != null)
-            {
-                double midX = (edge.X1 + edge.X2) / 2;
-                double midY = (edge.Y1 + edge.Y2) / 2;
-                Canvas.SetLeft(weightLabel, midX);
-                Canvas.SetTop(weightLabel, midY);
-            }
-        }*/
-
-        private void AddEdgeToCanvas(string start, string end, int weight)
-        {
-            if (!graph.Nodes.ContainsKey(start) || !graph.Nodes.ContainsKey(end))
-                return;
-
-            var startPosition = graph.Nodes[start].Position;
-            var endPosition = graph.Nodes[end].Position;
-
-            // Вычисляем координаты начала и конца линии с учётом радиуса узла
-            var edgePoints = GetEdgePoints(startPosition, endPosition, NodeRadius);
-
-            Line edge = new Line
-            {
-                X1 = edgePoints.Item1.X,
-                Y1 = edgePoints.Item1.Y,
-                X2 = edgePoints.Item2.X,
-                Y2 = edgePoints.Item2.Y,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2,
-                Tag = Tuple.Create(start, end) // Сохраняем имена вершин в теге линии
-            };
-
-            // Добавляем линию на холст
-            GraphCanvas.Children.Add(edge);
-
-            // Добавляем текст для веса
-            TextBlock weightLabel = new TextBlock
-            {
-                Text = weight.ToString(),
-                Foreground = Brushes.Black,
-                FontWeight = FontWeights.Bold,
-                Background = Brushes.White
-            };
-
-            // Устанавливаем положение текста в середине линии
-            double midX = (edge.X1 + edge.X2) / 2;
-            double midY = (edge.Y1 + edge.Y2) / 2;
-            Canvas.SetLeft(weightLabel, midX);
-            Canvas.SetTop(weightLabel, midY);
-
-            GraphCanvas.Children.Add(weightLabel);
-        }
-
-        /*private void UpdateEdges(string nodeName)
-        {
-            if (string.IsNullOrEmpty(nodeName) || !graph.Nodes.ContainsKey(nodeName))
-                return;
-
-            // Получаем текущую позицию перемещённого узла
-            var nodePosition = graph.Nodes[nodeName].Position;
-
-            // Обходим все рёбра на холсте
-            foreach (var edge in GraphCanvas.Children.OfType<Line>())
-            {
-                // Если ребро связано с перемещённым узлом
-                if (edge.Tag is Tuple<string, string> edgeNodes)
+                if (movingNode != null)
                 {
-                    string startNode = edgeNodes.Item1;
-                    string endNode = edgeNodes.Item2;
+                    Point mousePosition = e.GetPosition(GraphCanvas);
+                    double newX = mousePosition.X - mouseOffset.X;
+                    double newY = mousePosition.Y - mouseOffset.Y;
 
-                    if (startNode == nodeName)
+                    Canvas.SetLeft(movingNode, newX);
+                    Canvas.SetTop(movingNode, newY);
+
+                    var label = movingNode.Children.OfType<TextBlock>().FirstOrDefault();
+                    if (label != null && graph.Nodes.ContainsKey(label.Text))
                     {
-                        // Узел является началом ребра, обновляем начальную точку
-                        var endPosition = graph.Nodes[endNode].Position;
-                        UpdateLine(edge, nodePosition, endPosition);
+                        graph.Nodes[label.Text].Position = new Point(newX + NodeRadius, newY + NodeRadius);
                     }
-                    else if (endNode == nodeName)
-                    {
-                        // Узел является концом ребра, обновляем конечную точку
-                        var startPosition = graph.Nodes[startNode].Position;
-                        UpdateLine(edge, startPosition, nodePosition);
-                    }
+
+                    UpdateEdges(label?.Text);
                 }
             }
-        }*/
 
-       
-
-        /*private void FindShortestPath_Click(object sender, RoutedEventArgs e)
-        {
-            string source = SourceNodeTextBox.Text.Trim();
-            string target = TargetNodeTextBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target) ||
-                !graph.Nodes.ContainsKey(source) || !graph.Nodes.ContainsKey(target))
-            {
-                MessageBox.Show("Укажите корректные узлы.");
-                return;
-            }
-
-            AlgorithmLog.Clear();
-            var path = graph.Dijkstra(source, target, LogStep);
-            if (path != null)
-            {
-                AlgorithmLog.AppendText("Кратчайший путь: " + string.Join(" -> ", path) + Environment.NewLine);
-            }
-            else
-            {
-                AlgorithmLog.AppendText("Путь не найден." + Environment.NewLine);
-            }
-        }*/
-        private void AddNode_Click(object sender, RoutedEventArgs e)
-        {
-            string nodeName = NodeNameTextBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(nodeName))
-            {
-                MessageBox.Show("Введите имя узла.");
-                return;
-            }
-
-            if (graph.Nodes.ContainsKey(nodeName))
-            {
-                MessageBox.Show($"Узел с именем {nodeName} уже существует.");
-                return;
-            }
-
-            Point position = new Point(50 + graph.Nodes.Count * 50, 50 + graph.Nodes.Count * 50); // Автоматическое размещение узлов
-            graph.AddNode(nodeName);
-            AddNodeToCanvas(nodeName, position);
-
-            MessageBox.Show($"Узел {nodeName} успешно добавлен.");
-        }
-
-        private void DeleteNode_Click(object sender, RoutedEventArgs e)
-        {
-            string nodeName = NodeNameTextBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(nodeName))
-            {
-                MessageBox.Show("Введите имя удаляемого узла.");
-                return;
-            }
-
-            if (!graph.Nodes.ContainsKey(nodeName))
-            {
-                MessageBox.Show($"Узел с именем {nodeName} не найден.");
-                return;
-            }
-
-            // Удаляем узел из модели графа
-            graph.RemoveNode(nodeName);
-
-            // Удаляем узел с холста
-            var nodeToRemove = GraphCanvas.Children.OfType<Grid>()
-                                .FirstOrDefault(node => node.Children.OfType<TextBlock>().FirstOrDefault()?.Text == nodeName);
-
-            if (nodeToRemove != null)
-            {
-                GraphCanvas.Children.Remove(nodeToRemove);
-            }
-
-            // Удаляем рёбра, связанные с узлом
-            var edgesToRemove = GraphCanvas.Children.OfType<Line>()
-                                   .Where(line => line.Tag is Tuple<string, string> edgeNodes &&
-                                                  (edgeNodes.Item1 == nodeName || edgeNodes.Item2 == nodeName))
-                                   .ToList();
-
-            foreach (var edge in edgesToRemove)
-            {
-                GraphCanvas.Children.Remove(edge);
-            }
-
-            MessageBox.Show($"Узел {nodeName} и все связанные рёбра успешно удалены.");
-        }
-
-        private void DeleteEdge_Click(object sender, RoutedEventArgs e)
-        {
-            string startNode = EdgeStartTextBox.Text.Trim();
-            string endNode = EdgeEndTextBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(startNode) || string.IsNullOrEmpty(endNode))
-            {
-                MessageBox.Show("Введите начальный и конечный узлы.");
-                return;
-            }
-
-            if (!graph.Nodes.ContainsKey(startNode) || !graph.Nodes.ContainsKey(endNode))
-            {
-                MessageBox.Show("Указанные узлы не найдены.");
-                return;
-            }
-
-            // Удаляем ребро из модели графа
-            graph.RemoveEdge(startNode, endNode);
-
-            // Удаляем ребро с холста
-            var edgeToRemove = GraphCanvas.Children.OfType<Line>()
-                                .FirstOrDefault(line => line.Tag is Tuple<string, string> edgeNodes &&
-                                                        edgeNodes.Item1 == startNode && edgeNodes.Item2 == endNode);
-
-            if (edgeToRemove != null)
-            {
-                GraphCanvas.Children.Remove(edgeToRemove);
-                MessageBox.Show($"Ребро между {startNode} и {endNode} успешно удалено.");
-            }
-            else
-            {
-                MessageBox.Show($"Ребро между {startNode} и {endNode} не найдено.");
-            }
-        }
-
-        private void LogStep(string message)
-        {
-            AlgorithmLog.AppendText(message + Environment.NewLine);
-        }
-
-        private void ClearPath_Click(object sender, RoutedEventArgs e)
-        {
-            AlgorithmLog.Clear();
-        }
-        #region Новые методы
-
-        // Метод для подсветки узлов при перемещении
-        /*private void HighlightNode(string nodeName, Brush color)
-        {
-            var nodeGroup = GraphCanvas.Children.OfType<Grid>()
-                .FirstOrDefault(grid => grid.Children.OfType<TextBlock>().FirstOrDefault()?.Text == nodeName);
-
-            if (nodeGroup != null)
-            {
-                var ellipse = nodeGroup.Children.OfType<Ellipse>().FirstOrDefault();
-                if (ellipse != null)
-                {
-                    ellipse.Fill = color;
-                }
-            }
-        }*/
-
-        // Метод для обновления положения линий (рёбер)
-        private void UpdateEdges(string nodeName)
-        {
-            if (string.IsNullOrEmpty(nodeName) || !graph.Nodes.ContainsKey(nodeName))
-                return;
-
-            // Получаем текущую позицию перемещённого узла
-            var nodePosition = graph.Nodes[nodeName].Position;
-
-            // Обходим все рёбра на холсте
-            foreach (var edge in GraphCanvas.Children.OfType<Line>())
-            {
-                // Если ребро связано с перемещённым узлом
-                if (edge.Tag is Tuple<string, string> edgeNodes)
-                {
-                    string startNode = edgeNodes.Item1;
-                    string endNode = edgeNodes.Item2;
-
-                    if (startNode == nodeName)
-                    {
-                        // Узел является началом ребра, обновляем начальную точку
-                        var endPosition = graph.Nodes[endNode].Position;
-                        UpdateLine(edge, nodePosition, endPosition);
-                    }
-                    else if (endNode == nodeName)
-                    {
-                        // Узел является концом ребра, обновляем конечную точку
-                        var startPosition = graph.Nodes[startNode].Position;
-                        UpdateLine(edge, startPosition, nodePosition);
-                    }
-                }
-            }
-        }
-
-        // Метод для обновления линии
-        private void UpdateLine(Line edge, Point startPosition, Point endPosition)
-        {
-            // Вычисляем новые точки для линии
-            var edgePoints = GetEdgePoints(startPosition, endPosition, NodeRadius);
-
-            edge.X1 = edgePoints.Item1.X;
-            edge.Y1 = edgePoints.Item1.Y;
-            edge.X2 = edgePoints.Item2.X;
-            edge.Y2 = edgePoints.Item2.Y;
-
-            // Находим и обновляем текст с весом, если он связан с этой линией
-            var weightLabel = GraphCanvas.Children.OfType<TextBlock>()
-                .FirstOrDefault(label => Canvas.GetLeft(label) == (edge.X1 + edge.X2) / 2 &&
-                                         Canvas.GetTop(label) == (edge.Y1 + edge.Y2) / 2);
-
-            if (weightLabel != null)
-            {
-                double midX = (edge.X1 + edge.X2) / 2;
-                double midY = (edge.Y1 + edge.Y2) / 2;
-                Canvas.SetLeft(weightLabel, midX);
-                Canvas.SetTop(weightLabel, midY);
-            }
-        }
-
-        // Метод для получения точек начала и конца линии
-        private Tuple<Point, Point> GetEdgePoints(Point start, Point end, double radius)
-        {
-            // Вычисляем угол между вершинами
-            double angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
-
-            // Начальная точка (край первого круга)
-            Point startEdge = new Point(
-                start.X + radius * Math.Cos(angle),
-                start.Y + radius * Math.Sin(angle)
-            );
-
-            // Конечная точка (край второго круга)
-            Point endEdge = new Point(
-                end.X - radius * Math.Cos(angle),
-                end.Y - radius * Math.Sin(angle)
-            );
-
-            return Tuple.Create(startEdge, endEdge);
-        }
-
-        #endregion
-
-        #region Методы из вашего кода
-
-        private void GraphCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Point position = e.GetPosition(GraphCanvas);
-            string nodeName = ((char)('A' + graph.Nodes.Count)).ToString();
-
-            if (!graph.Nodes.ContainsKey(nodeName))
-            {
-                graph.AddNode(nodeName);
-                AddNodeToCanvas(nodeName, position);
-            }
-        }
-
-        private void Node_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (movingNode != null && e.LeftButton == MouseButtonState.Pressed)
-            {
-                // Получаем позицию мыши
-                Point mousePosition = e.GetPosition(GraphCanvas);
-
-                // Вычисляем новые координаты узла
-                double newX = mousePosition.X - mouseOffset.X;
-                double newY = mousePosition.Y - mouseOffset.Y;
-
-                // Перемещаем узел
-                Canvas.SetLeft(movingNode, newX);
-                Canvas.SetTop(movingNode, newY);
-
-                // Обновляем координаты узла в модели графа
-                var label = movingNode.Children.OfType<TextBlock>().FirstOrDefault();
-                if (label != null && graph.Nodes.ContainsKey(label.Text))
-                {
-                    graph.Nodes[label.Text].Position = new Point(newX + NodeRadius, newY + NodeRadius);
-                }
-
-                // Подсвечиваем узел
-                var ellipse = movingNode.Children.OfType<Ellipse>().FirstOrDefault();
-                if (ellipse != null)
-                {
-                    ellipse.Fill = Brushes.Yellow; // Подсветка узла
-                }
-
-                // Обновляем связанные рёбра
-                var nodeName = label?.Text;
-                UpdateEdges(nodeName);
-            }
-        }
-
-        private void Node_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (movingNode != null)
-            {
-                // Убираем подсветку с узла
-                var ellipse = movingNode.Children.OfType<Ellipse>().FirstOrDefault();
-                if (ellipse != null)
-                {
-                    ellipse.Fill = Brushes.LightBlue; // Возвращаем основной цвет
-                }
-
-                // Завершаем перемещение
-                movingNode = null;
-                GraphCanvas.ReleaseMouseCapture();
-            }
-        }
-
-        private void AddNodeToCanvas(string name, Point position)
-        {
-            // Создаём круг узла
-            Ellipse node = new Ellipse
-            {
-                Width = NodeRadius * 2,
-                Height = NodeRadius * 2,
-                Fill = Brushes.LightBlue, // Основной цвет узла
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
-
-            // Создаём текст с именем узла
-            TextBlock label = new TextBlock
-            {
-                Text = name,
-                Foreground = Brushes.Black,
-                FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
-            // Группа для объединения круга и текста
-            Grid nodeGroup = new Grid();
-            nodeGroup.Children.Add(node);
-            nodeGroup.Children.Add(label);
-
-            // Привязываем события мыши для подсветки и перемещения
-            nodeGroup.MouseLeftButtonDown += Node_MouseLeftButtonDown;
-            nodeGroup.MouseLeftButtonUp += Node_MouseLeftButtonUp;
-            nodeGroup.MouseMove += Node_MouseMove;
-
-            // Добавляем узел на Canvas
-            GraphCanvas.Children.Add(nodeGroup);
-            Canvas.SetLeft(nodeGroup, position.X - NodeRadius);
-            Canvas.SetTop(nodeGroup, position.Y - NodeRadius);
-
-            // Добавляем узел в граф
-            graph.Nodes[name].Position = position;
-        }
-
-        #endregion
+        // Логи поиска пути
         private async void FindShortestPath_Click(object sender, RoutedEventArgs e)
         {
             string source = SourceNodeTextBox.Text.Trim();
@@ -718,31 +227,25 @@ namespace task4
             if (path != null)
             {
                 Log($"Кратчайший путь: {string.Join(" -> ", path)}.");
+                Log($"Длина кратчайшего пути: {graph.GetPathDistance(path)}.");
 
                 // Подсвечиваем весь путь зелёным
                 foreach (var node in path)
                 {
                     HighlightNode(node, Brushes.Green);
-                    await Task.Delay(1000); // Задержка между подсветками
+                    await Task.Delay(500); // Задержка для подсветки каждого узла
                 }
             }
             else
             {
                 Log("Кратчайший путь не найден.");
+                MessageBox.Show("Кратчайший путь не найден.");
             }
 
             // Убираем подсветку после завершения
             await Task.Delay(1000);
             ResetNodeColors();
         }
-
-        private void Log(string message)
-        {
-            AlgorithmLog.AppendText($" {message}{Environment.NewLine}");
-            AlgorithmLog.ScrollToEnd();
-        }
-
-        // Подсветка узла определённым цветом
         private void HighlightNode(string nodeName, Brush color)
         {
             var nodeGroup = GraphCanvas.Children.OfType<Grid>()
@@ -758,7 +261,280 @@ namespace task4
             }
         }
 
-        // Сброс цвета всех узлов
+        private void LogStep(string currentNode, string neighbor, int distance)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    Log($"Идём из {currentNode} в {neighbor}, расстояние: {distance}.");
+                });
+            }
+
+            private void Log(string message)
+            {
+                AlgorithmLog.AppendText($"{message}{Environment.NewLine}");
+            }
+        // Добавление узла на Canvas
+        private void AddNodeToCanvas(string name, Point position)
+        {
+            // Создаём круг для узла
+            Ellipse node = new Ellipse
+            {
+                Width = NodeRadius * 2,
+                Height = NodeRadius * 2,
+                Fill = Brushes.LightBlue,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2
+            };
+
+            // Создаём текст для отображения имени узла
+            TextBlock label = new TextBlock
+            {
+                Text = name,
+                Foreground = Brushes.Black,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            // Объединяем круг и текст в Grid
+            Grid nodeGroup = new Grid();
+            nodeGroup.Children.Add(node);
+            nodeGroup.Children.Add(label);
+
+            // Привязываем события для перемещения
+            nodeGroup.MouseRightButtonDown += Node_MouseRightButtonDown;
+            nodeGroup.MouseRightButtonUp += Node_MouseRightButtonUp;
+            nodeGroup.MouseMove += Node_MouseMove;
+
+            // Добавляем узел на Canvas
+            GraphCanvas.Children.Add(nodeGroup);
+            Canvas.SetLeft(nodeGroup, position.X - NodeRadius);
+            Canvas.SetTop(nodeGroup, position.Y - NodeRadius);
+
+            // Сохраняем позицию узла в модели графа
+            graph.Nodes[name].Position = position;
+        }
+
+        // Добавление ребра на Canvas
+        private void AddEdgeToCanvas(string start, string end, int weight)
+        {
+            if (!graph.Nodes.ContainsKey(start) || !graph.Nodes.ContainsKey(end))
+                return;
+
+            // Получаем координаты начальной и конечной точек
+            var startPosition = graph.Nodes[start].Position;
+            var endPosition = graph.Nodes[end].Position;
+
+            // Вычисляем крайние точки линии с учётом радиуса узлов
+            var edgePoints = GetEdgePoints(startPosition, endPosition, NodeRadius);
+
+            // Создаём линию
+            Line edge = new Line
+            {
+                X1 = edgePoints.Item1.X,
+                Y1 = edgePoints.Item1.Y,
+                X2 = edgePoints.Item2.X,
+                Y2 = edgePoints.Item2.Y,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2,
+                Tag = Tuple.Create(start, end) // Сохраняем информацию о вершинах в теге линии
+            };
+
+            // Добавляем линию на Canvas
+            GraphCanvas.Children.Add(edge);
+
+            // Создаём текст с весом ребра
+            TextBlock weightLabel = new TextBlock
+            {
+                Text = weight.ToString(),
+                Foreground = Brushes.Red,
+                FontWeight = FontWeights.Bold,
+                Background = Brushes.White
+            };
+
+            // Устанавливаем текст в середину линии
+            double midX = (edge.X1 + edge.X2) / 2;
+            double midY = (edge.Y1 + edge.Y2) / 2;
+            Canvas.SetLeft(weightLabel, midX);
+            Canvas.SetTop(weightLabel, midY);
+
+            // Добавляем текст на Canvas
+            GraphCanvas.Children.Add(weightLabel);
+        }
+
+        // Обновление положения рёбер, связанных с узлом
+        private void UpdateEdges(string nodeName)
+        {
+            if (string.IsNullOrEmpty(nodeName) || !graph.Nodes.ContainsKey(nodeName))
+                return;
+
+            // Получаем текущую позицию перемещённого узла
+            var nodePosition = graph.Nodes[nodeName].Position;
+
+            // Обходим все рёбра на Canvas
+            foreach (var edge in GraphCanvas.Children.OfType<Line>())
+            {
+                if (edge.Tag is Tuple<string, string> edgeNodes)
+                {
+                    string startNode = edgeNodes.Item1;
+                    string endNode = edgeNodes.Item2;
+
+                    if (startNode == nodeName)
+                    {
+                        // Узел является началом ребра, обновляем начальную точку
+                        var endPosition = graph.Nodes[endNode].Position;
+                        UpdateLine(edge, nodePosition, endPosition);
+                    }
+                    else if (endNode == nodeName)
+                    {
+                        // Узел является концом ребра, обновляем конечную точку
+                        var startPosition = graph.Nodes[startNode].Position;
+                        UpdateLine(edge, startPosition, nodePosition);
+                    }
+                }
+            }
+        }
+
+        // Вспомогательный метод для обновления линии
+        private void UpdateLine(Line edge, Point startPosition, Point endPosition)
+        {
+            // Получаем крайние точки линии с учётом радиуса узлов
+            var edgePoints = GetEdgePoints(startPosition, endPosition, NodeRadius);
+
+            edge.X1 = edgePoints.Item1.X;
+            edge.Y1 = edgePoints.Item1.Y;
+            edge.X2 = edgePoints.Item2.X;
+            edge.Y2 = edgePoints.Item2.Y;
+
+            // Обновляем текст с весом, если он связан с этой линией
+            var weightLabel = GraphCanvas.Children.OfType<TextBlock>()
+                .FirstOrDefault(label => Canvas.GetLeft(label) == (edge.X1 + edge.X2) / 2 &&
+                                         Canvas.GetTop(label) == (edge.Y1 + edge.Y2) / 2);
+
+            if (weightLabel != null)
+            {
+                double midX = (edge.X1 + edge.X2) / 2;
+                double midY = (edge.Y1 + edge.Y2) / 2;
+                Canvas.SetLeft(weightLabel, midX);
+                Canvas.SetTop(weightLabel, midY);
+            }
+        }
+
+        // Вспомогательный метод для вычисления крайних точек линии
+        private Tuple<Point, Point> GetEdgePoints(Point start, Point end, double radius)
+        {
+            // Вычисляем угол между вершинами
+            double angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
+
+            // Начальная точка (край первого круга)
+            Point startEdge = new Point(
+                start.X + radius * Math.Cos(angle),
+                start.Y + radius * Math.Sin(angle)
+            );
+
+            // Конечная точка (край второго круга)
+            Point endEdge = new Point(
+                end.X - radius * Math.Cos(angle),
+                end.Y - radius * Math.Sin(angle)
+            );
+
+            return Tuple.Create(startEdge, endEdge);
+        }
+        // Обработчик события при нажатии ПКМ на узел
+        private void Node_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Grid nodeGroup)
+            {
+                movingNode = nodeGroup; // Запоминаем текущий узел для перемещения
+                Point mousePosition = e.GetPosition(GraphCanvas);
+                double nodeX = Canvas.GetLeft(nodeGroup);
+                double nodeY = Canvas.GetTop(nodeGroup);
+
+                // Вычисляем смещение мыши относительно узла
+                mouseOffset = new Point(mousePosition.X - nodeX, mousePosition.Y - nodeY);
+
+                // Устанавливаем режим захвата мыши
+                GraphCanvas.CaptureMouse();
+
+                // Подсвечиваем узел для обозначения перемещения
+                var ellipse = nodeGroup.Children.OfType<Ellipse>().FirstOrDefault();
+                if (ellipse != null)
+                {
+                    ellipse.Fill = Brushes.Orange; // Подсветка текущего узла
+                }
+            }
+        }
+
+        // Обработчик события при отпускании ПКМ
+        private void Node_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (movingNode != null)
+            {
+                // Убираем подсветку узла
+                var ellipse = movingNode.Children.OfType<Ellipse>().FirstOrDefault();
+                if (ellipse != null)
+                {
+                    ellipse.Fill = Brushes.LightBlue; // Возвращаем цвет узла
+                }
+
+                movingNode = null; // Сбрасываем перемещаемый узел
+                GraphCanvas.ReleaseMouseCapture(); // Отпускаем мышь
+            }
+        }
+
+        // Обработчик события перемещения узла (ПКМ)
+        private void Node_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (movingNode != null && e.RightButton == MouseButtonState.Pressed)
+            {
+                // Получаем текущую позицию мыши
+                Point mousePosition = e.GetPosition(GraphCanvas);
+
+                // Вычисляем новые координаты узла
+                double newX = mousePosition.X - mouseOffset.X;
+                double newY = mousePosition.Y - mouseOffset.Y;
+
+                // Перемещаем узел
+                Canvas.SetLeft(movingNode, newX);
+                Canvas.SetTop(movingNode, newY);
+
+                // Обновляем координаты узла в модели графа
+                var label = movingNode.Children.OfType<TextBlock>().FirstOrDefault();
+                if (label != null && graph.Nodes.ContainsKey(label.Text))
+                {
+                    graph.Nodes[label.Text].Position = new Point(newX + NodeRadius, newY + NodeRadius);
+                }
+
+                // Обновляем связанные рёбра
+                UpdateEdges(label?.Text);
+            }
+        }
+        private void ClearPath_Click(object sender, RoutedEventArgs e)
+        {
+            // Очищаем поле логов
+            AlgorithmLog.Clear();
+
+            // Сбрасываем подсветку всех узлов
+            ResetNodeColors();
+        }
+        private void GraphCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Получаем координаты клика
+            Point position = e.GetPosition(GraphCanvas);
+
+            // Генерируем имя узла (по алфавиту)
+            string nodeName = ((char)('A' + graph.Nodes.Count)).ToString();
+
+            // Проверяем, существует ли узел с таким именем
+            if (!graph.Nodes.ContainsKey(nodeName))
+            {
+                // Добавляем узел в модель графа
+                graph.AddNode(nodeName);
+
+                // Добавляем узел на Canvas
+                AddNodeToCanvas(nodeName, position);
+            }
+        }
         private void ResetNodeColors()
         {
             foreach (var nodeGroup in GraphCanvas.Children.OfType<Grid>())
@@ -766,11 +542,14 @@ namespace task4
                 var ellipse = nodeGroup.Children.OfType<Ellipse>().FirstOrDefault();
                 if (ellipse != null)
                 {
-                    ellipse.Fill = Brushes.LightBlue;
+                    ellipse.Fill = Brushes.LightBlue; // Основной цвет узлов
                 }
             }
         }
+
     }
 }
+        
+
     
 
